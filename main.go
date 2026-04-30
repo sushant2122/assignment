@@ -20,7 +20,7 @@ var db *sql.DB
 
 // connect reads the password and returns a DB connection
 func connect() (*sql.DB, error) {
-	bin, err := ioutil.ReadFile("/run/secrets/db-password")
+	bin, err := ioutil.ReadFile("/app/secrets/db-password")
 	if err != nil {
 		return nil, err
 	}

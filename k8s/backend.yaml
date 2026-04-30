@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: blog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: sudssy/blog-backend:v2
+        volumeMounts:
+        - name: db-secret
+          mountPath: /app/secrets        # ← changed from /run/secrets
+      volumes:
+      - name: db-secret
+        secret:
+          secretName: db-password
+          items:
+          - key: password
+            path: db-password
