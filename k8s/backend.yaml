@@ -13,12 +13,16 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z db 5432; do echo waiting for db; sleep 2; done']
       containers:
       - name: backend
-        image: sudssy/blog-backend:v2
+        image: sudssy/blog-backend:v3
         volumeMounts:
         - name: db-secret
-          mountPath: /app/secrets        # ← changed from /run/secrets
+          mountPath: /app/secrets
       volumes:
       - name: db-secret
         secret:
@@ -26,3 +30,15 @@ spec:
           items:
           - key: password
             path: db-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: blog
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 8000
+    targetPort: 8000

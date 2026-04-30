@@ -37,7 +37,10 @@ pipeline {
 
         stage('Update Kubernetes') {
             steps {
+                sh "${KUBECTL} rollout restart deployment/postgres -n blog"
+                sh "${KUBECTL} rollout status deployment/postgres -n blog --timeout=60s"
                 sh "${KUBECTL} set image deployment/backend backend=${IMAGE_NAME}:${IMAGE_TAG} -n blog"
+                sh "${KUBECTL} rollout status deployment/backend -n blog --timeout=120s"
             }
         }
     }
