@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USER = "yourusername"
+        DOCKER_USER = "sudssy"
         IMAGE_NAME  = "${DOCKER_USER}/blog-backend"
         IMAGE_TAG   = "v${BUILD_NUMBER}"
+        KUBECTL     = "/usr/bin/kubectl"
     }
 
     stages {
@@ -36,11 +37,7 @@ pipeline {
 
         stage('Update Kubernetes') {
             steps {
-                sh """
-                    kubectl set image deployment/backend \
-                      backend=${IMAGE_NAME}:${IMAGE_TAG} \
-                      -n blog
-                """
+                sh "${KUBECTL} set image deployment/backend backend=${IMAGE_NAME}:${IMAGE_TAG} -n blog"
             }
         }
     }
