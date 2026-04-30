@@ -84,7 +84,7 @@ func prepare() error {
 		return err
 	}
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 7; i++ {
 		if _, err := db.Exec("INSERT INTO blog (title) VALUES ($1);", fmt.Sprintf("Blog post #%d", i)); err != nil {
 			return err
 		}
